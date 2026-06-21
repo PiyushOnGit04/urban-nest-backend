@@ -1,0 +1,21 @@
+package com.example.urbannest.repository;
+
+import com.example.urbannest.model.Room;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface RoomRepository extends JpaRepository<Room, Long> {
+
+    List<Room> findByAvailableTrue();
+
+    List<Room> findByCityAndAvailableTrue(String city);
+
+    List<Room> findByOwnerId(Long ownerId);
+
+    List<Room> findByCityContainingIgnoreCaseAndAvailableTrue(String city);
+
+    List<Room> findByLocalityContainingIgnoreCaseAndAvailableTrue(String locality);
+
+    List<Room> findByRentBetweenAndAvailableTrue(Double minRent, Double maxRent);
+}
