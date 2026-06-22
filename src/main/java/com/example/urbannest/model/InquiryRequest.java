@@ -28,13 +28,13 @@ public class InquiryRequest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tenant_id", nullable = false)
-    @JsonIgnore
+    @JsonIgnoreProperties({"rooms","inquiries","reviews","password"})
     private User tenant;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id", nullable = false)
-    @JsonIgnore
-    private Room room;
+   @ManyToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "room_id", nullable = false)
+   @JsonIgnoreProperties({"inquiries","reviews"})
+   private Room room;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
