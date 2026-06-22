@@ -1,5 +1,6 @@
 package com.example.urbannest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -55,9 +56,6 @@ public class Room {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Room.java
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     @JsonIgnoreProperties({"rooms", "inquiries", "reviews", "password"})
@@ -77,6 +75,7 @@ public class Room {
     )
     private List<Review> reviews = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(
             mappedBy = "room",
             cascade = CascadeType.ALL,
@@ -102,5 +101,4 @@ public class Room {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
 }
