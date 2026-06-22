@@ -4,6 +4,7 @@ import com.example.urbannest.model.InquiryRequest;
 import com.example.urbannest.model.InquiryStatus;
 import com.example.urbannest.repository.InquiryRequestRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -16,7 +17,7 @@ public class InquiryRequestService {
     }
 
     public InquiryRequest createInquiry(InquiryRequest request) {
-        request.setStatus(InquiryStatus.PENDING); // Enforce initial status programmatically
+        request.setStatus(InquiryStatus.PENDING);
         return inquiryRepository.save(request);
     }
 
@@ -29,30 +30,22 @@ public class InquiryRequestService {
     }
 
     public InquiryRequest updateInquiryStatus(Long requestId, String targetStatus) {
+
         InquiryRequest request = inquiryRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Inquiry request not found!"));
 
-        // Ensure status updates match expected states
-        public InquiryRequest updateInquiryStatus(Long requestId, String targetStatus) {
+        if (targetStatus.equalsIgnoreCase("ACCEPTED")) {
 
-    InquiryRequest request = inquiryRepository.findById(requestId)
-            .orElseThrow(() -> new RuntimeException("Inquiry request not found!"));
+            request.setStatus(InquiryStatus.ACCEPTED);
 
-    if (targetStatus.equalsIgnoreCase("ACCEPTED")) {
+        } else if (targetStatus.equalsIgnoreCase("REJECTED")) {
 
-        request.setStatus(InquiryStatus.ACCEPTED);
+            request.setStatus(InquiryStatus.REJECTED);
 
-    } else if (targetStatus.equalsIgnoreCase("REJECTED")) {
+        } else {
 
-        request.setStatus(InquiryStatus.REJECTED);
-
-    } else {
-
-        throw new IllegalArgumentException("Invalid status update value provided");
-    }
-
-    return inquiryRepository.save(request);
-}
+            throw new IllegalArgumentException("Invalid status update value");
+        }
 
         return inquiryRepository.save(request);
     }
