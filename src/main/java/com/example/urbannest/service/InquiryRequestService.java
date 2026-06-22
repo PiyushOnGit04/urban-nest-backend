@@ -33,11 +33,26 @@ public class InquiryRequestService {
                 .orElseThrow(() -> new RuntimeException("Inquiry request not found!"));
 
         // Ensure status updates match expected states
-        if (targetStatus.equalsIgnoreCase("ACCEPTED") || targetStatus.equalsIgnoreCase("REJECTED")) {
-            request.setStatus(InquiryStatus.ACCEPTED);
-        } else {
-            throw new IllegalArgumentException("Invalid status update value provided");
-        }
+        public InquiryRequest updateInquiryStatus(Long requestId, String targetStatus) {
+
+    InquiryRequest request = inquiryRepository.findById(requestId)
+            .orElseThrow(() -> new RuntimeException("Inquiry request not found!"));
+
+    if (targetStatus.equalsIgnoreCase("ACCEPTED")) {
+
+        request.setStatus(InquiryStatus.ACCEPTED);
+
+    } else if (targetStatus.equalsIgnoreCase("REJECTED")) {
+
+        request.setStatus(InquiryStatus.REJECTED);
+
+    } else {
+
+        throw new IllegalArgumentException("Invalid status update value provided");
+    }
+
+    return inquiryRepository.save(request);
+}
 
         return inquiryRepository.save(request);
     }
