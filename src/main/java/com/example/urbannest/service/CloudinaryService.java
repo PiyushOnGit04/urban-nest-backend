@@ -20,9 +20,12 @@ public class CloudinaryService {
     public Map uploadFile(MultipartFile file) throws IOException {
 
         return cloudinary.uploader().upload(
-                file.getBytes(),
-                ObjectUtils.emptyMap()
-        );
+        file.getBytes(),
+        ObjectUtils.asMap(
+                "quality", "auto:eco",
+                "fetch_format", "auto"
+        )
+);
     }
 
     public void deleteFile(String publicId) throws IOException {
