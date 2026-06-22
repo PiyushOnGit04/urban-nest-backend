@@ -1,6 +1,5 @@
 package com.example.urbannest.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,12 +27,10 @@ public class InquiryRequest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tenant_id", nullable = false)
-    @JsonIgnore
     private User tenant;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", nullable = false)
-    @JsonIgnore
     private Room room;
 
     @Enumerated(EnumType.STRING)
