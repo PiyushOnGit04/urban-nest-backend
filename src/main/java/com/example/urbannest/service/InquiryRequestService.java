@@ -22,11 +22,26 @@ public class InquiryRequestService {
     }
 
     public List<InquiryRequest> getRequestsForTenant(Long tenantId) {
-        return inquiryRepository.findByTenantId(tenantId);
+
+        List<InquiryRequest> inquiries =
+                inquiryRepository.findByTenantId(tenantId);
+
+        inquiries.sort(
+                (a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt())
+        );
+
+        return inquiries;
     }
 
     public List<InquiryRequest> getRequestsForRoom(Long roomId) {
-        return inquiryRepository.findByRoomId(roomId);
+        List<InquiryRequest> inquiries =
+                inquiryRepository.findByRoomId(roomId);
+
+        inquiries.sort(
+                (a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt())
+        );
+
+        return inquiries;
     }
 
     public InquiryRequest updateInquiryStatus(Long requestId, String targetStatus) {
