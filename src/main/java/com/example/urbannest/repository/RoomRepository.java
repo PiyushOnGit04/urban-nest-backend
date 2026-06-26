@@ -2,10 +2,12 @@ package com.example.urbannest.repository;
 
 import com.example.urbannest.model.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 
-public interface RoomRepository extends JpaRepository<Room, Long> {
+public interface RoomRepository extends JpaRepository<Room, Long>,
+        JpaSpecificationExecutor<Room> {
 
     List<Room> findByAvailableTrue();
 

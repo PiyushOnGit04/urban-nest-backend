@@ -4,6 +4,9 @@ import com.example.urbannest.dto.RoomRequest;
 import com.example.urbannest.model.Room;
 import com.example.urbannest.model.RoomType;
 import com.example.urbannest.repository.RoomRepository;
+import com.example.urbannest.specification.RoomSpecification;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -77,5 +80,32 @@ public class RoomService {
 
     public List<Room> getRoomsByRentRange(Double minRent, Double maxRent) {
         return roomRepository.findByRentBetweenAndAvailableTrue(minRent, maxRent);
+    }
+
+    public List<Room> filterRooms(
+            String search,
+            Double minRent,
+            Double maxRent,
+            RoomType roomType,
+            String sortBy,
+            String order
+    ) {
+
+        Specification<Room> specification =
+                RoomSpecification.filterRooms(search, minRent, maxRent, roomType);
+
+        Sort sort = Sort.unsorted();
+
+        if (sortBy != null && !sortBy.isBlank()) {
+
+            Sort.Direction direction =
+                    "desc".equalsIgnoreCase(order)
+                            ? Sort.Direction.DESC
+                            : Sort.Direction.ASC;
+
+            sort = Sort.by(direction, sortBy);
+        }
+
+        return roomRepository.findAll(specification, sort);
     }
 }

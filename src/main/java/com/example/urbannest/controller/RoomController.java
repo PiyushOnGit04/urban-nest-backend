@@ -57,8 +57,32 @@ public class RoomController {
 
     // 2. Get all available rooms globally
     @GetMapping
-    public ResponseEntity<List<Room>> getAllAvailableRooms() {
-        return ResponseEntity.ok(roomService.getAllAvailableRooms());
+    public ResponseEntity<List<Room>> getRooms(
+
+            @RequestParam(required = false) String search,
+
+            @RequestParam(required = false) Double minRent,
+
+            @RequestParam(required = false) Double maxRent,
+
+            @RequestParam(required = false) RoomType roomType,
+
+            @RequestParam(required = false) String sortBy,
+
+            @RequestParam(defaultValue = "asc") String order
+
+    ) {
+
+        return ResponseEntity.ok(
+                roomService.filterRooms(
+                        search,
+                        minRent,
+                        maxRent,
+                        roomType,
+                        sortBy,
+                        order
+                )
+        );
     }
 
     // 3. Search rooms by City (Perfect for your Flutter app search bar)
