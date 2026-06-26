@@ -19,4 +19,6 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
             Long tenantId,
             Long roomId
     );
+
+
 }

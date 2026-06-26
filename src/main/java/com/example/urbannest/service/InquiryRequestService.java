@@ -44,6 +44,8 @@ public class InquiryRequestService {
         return inquiries;
     }
 
+
+
     public InquiryRequest updateInquiryStatus(Long requestId, String targetStatus) {
 
         InquiryRequest request = inquiryRepository.findById(requestId)
@@ -63,5 +65,9 @@ public class InquiryRequestService {
         }
 
         return inquiryRepository.save(request);
+    }
+
+    public boolean hasInquiry(Long tenantId, Long roomId) {
+        return inquiryRepository.existsByTenantIdAndRoomId(tenantId, roomId);
     }
 }

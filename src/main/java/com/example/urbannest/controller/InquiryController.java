@@ -75,4 +75,14 @@ public class InquiryController {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
+
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> hasInquiry(
+            @RequestParam Long tenantId,
+            @RequestParam Long roomId) {
+
+        return ResponseEntity.ok(
+                inquiryService.hasInquiry(tenantId, roomId)
+        );
+    }
 }

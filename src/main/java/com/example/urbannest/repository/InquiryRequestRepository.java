@@ -13,4 +13,6 @@ public interface InquiryRequestRepository extends JpaRepository<InquiryRequest, 
 
     // Get all requests for a specific room (so the owner can approve/reject)
     List<InquiryRequest> findByRoomId(Long roomId);
+
+    boolean existsByTenantIdAndRoomId(Long tenantId, Long roomId);
 }

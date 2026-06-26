@@ -72,6 +72,8 @@ public class WishlistController {
         );
     }
 
+
+
     @DeleteMapping
     public ResponseEntity<?> removeWishlist(
             @RequestParam Long tenantId,
