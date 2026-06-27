@@ -1,13 +1,17 @@
 package com.example.urbannest.service;
 
 import com.example.urbannest.dto.RoomRequest;
+import com.example.urbannest.model.Amenity;
 import com.example.urbannest.model.Room;
 import com.example.urbannest.model.RoomType;
+import com.example.urbannest.model.User;
+import com.example.urbannest.repository.AmenityRepository;
 import com.example.urbannest.repository.RoomRepository;
 import com.example.urbannest.specification.RoomSpecification;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -15,12 +19,33 @@ import java.util.Optional;
 public class RoomService {
 
     private final RoomRepository roomRepository;
+    private final AmenityRepository amenityRepository;
 
-    public RoomService(RoomRepository roomRepository) {
+    public RoomService(RoomRepository roomRepository,
+                       AmenityRepository amenityRepository) {
         this.roomRepository = roomRepository;
+        this.amenityRepository = amenityRepository;
     }
 
-    public Room createRoom(Room room) {
+    public Room createRoom(RoomRequest roomDto, User owner) {
+
+        List<Amenity> amenities =
+                amenityRepository.findAllById(roomDto.getAmenityIds());
+
+        Room room = Room.builder()
+                .title(roomDto.getTitle())
+                .description(roomDto.getDescription())
+                .rent(roomDto.getRent())
+                .deposit(roomDto.getDeposit())
+                .address(roomDto.getAddress())
+                .city(roomDto.getCity())
+                .locality(roomDto.getLocality())
+                .roomType(RoomType.valueOf(roomDto.getRoomType()))
+                .owner(owner)
+                .available(true)
+                .amenities(amenities)
+                .build();
+
         return roomRepository.save(room);
     }
 
@@ -41,12 +66,14 @@ public class RoomService {
     }
 
     public Room updateRoomAvailability(Long roomId, boolean isAvailable) {
+
         Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new RuntimeException("Room not found with id: " + roomId));
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+
         room.setAvailable(isAvailable);
+
         return roomRepository.save(room);
     }
-    // RoomService.java
 
     public Room updateRoom(Long roomId, RoomRequest roomDto) {
 
@@ -61,6 +88,11 @@ public class RoomService {
         room.setCity(roomDto.getCity());
         room.setLocality(roomDto.getLocality());
         room.setRoomType(RoomType.valueOf(roomDto.getRoomType()));
+
+        List<Amenity> amenities =
+                amenityRepository.findAllById(roomDto.getAmenityIds());
+
+        room.setAmenities(amenities);
 
         return roomRepository.save(room);
     }

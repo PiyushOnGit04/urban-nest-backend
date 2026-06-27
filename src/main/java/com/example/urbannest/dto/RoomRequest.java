@@ -2,6 +2,8 @@ package com.example.urbannest.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class RoomRequest {
     private String title;
@@ -13,4 +15,5 @@ public class RoomRequest {
     private String locality;
     private String roomType;
     private Long ownerId; // Connects the listing to the landlord profile
+    private List<Long> amenityIds;
 }

@@ -28,26 +28,14 @@ public class RoomController {
     // 1. Create a new room listing
     @PostMapping
     public ResponseEntity<?> createRoom(@RequestBody RoomRequest roomDto) {
+
         try {
-            // Find the owner entity using the incoming owner ID
+
             User owner = userService.getUserById(roomDto.getOwnerId())
                     .orElseThrow(() -> new RuntimeException("Owner profile not found!"));
 
-            // Map DTO to our core Database Entity using builder patterns
-            Room roomEntity = Room.builder()
-                    .title(roomDto.getTitle())
-                    .description(roomDto.getDescription())
-                    .rent(roomDto.getRent())
-                    .deposit(roomDto.getDeposit())
-                    .address(roomDto.getAddress())
-                    .city(roomDto.getCity())
-                    .locality(roomDto.getLocality())
-                    .roomType(RoomType.valueOf(roomDto.getRoomType()))
-                    .owner(owner) // Attach user entity as the foreign key owner relationship
-                    .available(true)
-                    .build();
+            Room savedRoom = roomService.createRoom(roomDto, owner);
 
-            Room savedRoom = roomService.createRoom(roomEntity);
             return new ResponseEntity<>(savedRoom, HttpStatus.CREATED);
 
         } catch (RuntimeException e) {
