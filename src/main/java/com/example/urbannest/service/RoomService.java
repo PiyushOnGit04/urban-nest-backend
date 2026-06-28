@@ -169,23 +169,23 @@ public class RoomService {
 
         List<Room> rooms = roomRepository.findAll(specification, sort);
 
-        for (Room room : rooms) {
-
-            boolean canViewPhone = false;
-
-            if (tenantId != null) {
-
-                canViewPhone = room.getInquiries().stream()
-                        .anyMatch(inquiry ->
-                                inquiry.getTenant().getId().equals(tenantId)
-                                        && inquiry.getStatus() == InquiryStatus.ACCEPTED
-                        );
-            }
-
-            if (!canViewPhone) {
-                room.getOwner().setPhoneNumber(null);
-            }
-        }
+//        for (Room room : rooms) {
+//
+//            boolean canViewPhone = false;
+//
+//            if (tenantId != null) {
+//
+//                canViewPhone = room.getInquiries().stream()
+//                        .anyMatch(inquiry ->
+//                                inquiry.getTenant().getId().equals(tenantId)
+//                                        && inquiry.getStatus() == InquiryStatus.ACCEPTED
+//                        );
+//            }
+//
+//            if (!canViewPhone) {
+//                room.getOwner().setPhoneNumber(null);
+//            }
+//        }
 
         return rooms;
     }
