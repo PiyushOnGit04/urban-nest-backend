@@ -1,6 +1,7 @@
 package com.example.urbannest.repository;
 
 import com.example.urbannest.model.InquiryRequest;
+import com.example.urbannest.model.InquiryStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -15,4 +16,10 @@ public interface InquiryRequestRepository extends JpaRepository<InquiryRequest, 
     List<InquiryRequest> findByRoomId(Long roomId);
 
     boolean existsByTenantIdAndRoomId(Long tenantId, Long roomId);
+
+    boolean existsByTenantIdAndRoomIdAndStatus(
+            Long tenantId,
+            Long roomId,
+            InquiryStatus status
+    );
 }

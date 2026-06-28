@@ -70,4 +70,19 @@ public class InquiryRequestService {
     public boolean hasInquiry(Long tenantId, Long roomId) {
         return inquiryRepository.existsByTenantIdAndRoomId(tenantId, roomId);
     }
+
+    public boolean canViewOwnerContact(Long tenantId, Long roomId) {
+        return inquiryRepository.existsByTenantIdAndRoomIdAndStatus(
+                tenantId,
+                roomId,
+                InquiryStatus.ACCEPTED
+        );
+    }
+    public boolean hasAcceptedInquiry(Long tenantId, Long roomId) {
+        return inquiryRepository.existsByTenantIdAndRoomIdAndStatus(
+                tenantId,
+                roomId,
+                InquiryStatus.ACCEPTED
+        );
+    }
 }
