@@ -1,9 +1,11 @@
 package com.example.urbannest.service;
 
 import com.example.urbannest.dto.RoomRequest;
-import com.example.urbannest.model.*;
+import com.example.urbannest.model.Amenity;
+import com.example.urbannest.model.Room;
+import com.example.urbannest.model.RoomType;
+import com.example.urbannest.model.User;
 import com.example.urbannest.repository.AmenityRepository;
-import com.example.urbannest.repository.InquiryRequestRepository;
 import com.example.urbannest.repository.RoomRepository;
 import com.example.urbannest.specification.RoomSpecification;
 import org.springframework.data.domain.Sort;
@@ -18,13 +20,11 @@ public class RoomService {
 
     private final RoomRepository roomRepository;
     private final AmenityRepository amenityRepository;
-    private final InquiryRequestRepository inquiryRequestRepository;
 
     public RoomService(RoomRepository roomRepository,
-                       AmenityRepository amenityRepository, InquiryRequestRepository inquiryRequestRepository) {
+                       AmenityRepository amenityRepository) {
         this.roomRepository = roomRepository;
         this.amenityRepository = amenityRepository;
-        this.inquiryRequestRepository = inquiryRequestRepository;
     }
 
     public Room createRoom(RoomRequest roomDto, User owner) {
@@ -61,33 +61,8 @@ public class RoomService {
         return roomRepository.findByOwnerId(ownerId);
     }
 
-    public Optional<Room> getRoomById(Long roomId, Long tenantId) {
-
-        Optional<Room> roomOptional = roomRepository.findById(roomId);
-
-        if (roomOptional.isEmpty()) {
-            return Optional.empty();
-        }
-
-        Room room = roomOptional.get();
-
-        if (tenantId == null) {
-            room.getOwner().setPhoneNumber(null);
-            return Optional.of(room);
-        }
-
-        boolean accepted = inquiryRequestRepository
-                .existsByTenantIdAndRoomIdAndStatus(
-                        tenantId,
-                        roomId,
-                        InquiryStatus.ACCEPTED
-                );
-
-        if (!accepted) {
-            room.getOwner().setPhoneNumber(null);
-        }
-
-        return Optional.of(room);
+    public Optional<Room> getRoomById(Long id) {
+        return roomRepository.findById(id);
     }
 
     public Room updateRoomAvailability(Long roomId, boolean isAvailable) {
@@ -145,8 +120,7 @@ public class RoomService {
             Double maxRent,
             RoomType roomType,
             String sortBy,
-            String order,
-            Long tenantId
+            String order
     ) {
 
         Specification<Room> specification =
@@ -164,26 +138,6 @@ public class RoomService {
             sort = Sort.by(direction, sortBy);
         }
 
-        List<Room> rooms = roomRepository.findAll(specification, sort);
-
-        for (Room room : rooms) {
-
-            boolean canViewPhone = false;
-
-            if (tenantId != null) {
-
-                canViewPhone = room.getInquiries().stream()
-                        .anyMatch(inquiry ->
-                                inquiry.getTenant().getId().equals(tenantId)
-                                        && inquiry.getStatus() == InquiryStatus.ACCEPTED
-                        );
-            }
-
-            if (!canViewPhone) {
-                room.getOwner().setPhoneNumber(null);
-            }
-        }
-
-        return rooms;
+        return roomRepository.findAll(specification, sort);
     }
 }

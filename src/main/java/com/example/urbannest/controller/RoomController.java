@@ -57,9 +57,8 @@ public class RoomController {
 
             @RequestParam(required = false) String sortBy,
 
-            @RequestParam(defaultValue = "asc") String order,
+            @RequestParam(defaultValue = "asc") String order
 
-            @RequestParam(required = false) Long tenantId
     ) {
 
         return ResponseEntity.ok(
@@ -69,8 +68,7 @@ public class RoomController {
                         maxRent,
                         roomType,
                         sortBy,
-                        order,
-                        tenantId
+                        order
                 )
         );
     }
@@ -82,12 +80,9 @@ public class RoomController {
     }
 
     // 4. View detailed breakdown of a single room listing
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getRoomById(
-            @PathVariable Long id,
-            @RequestParam(required = false) Long tenantId
-    ) {
-        return roomService.getRoomById(id, tenantId)
+    @GetMapping ("/{id}")
+    public ResponseEntity<?> getRoomById(@PathVariable Long id) {
+        return roomService.getRoomById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
