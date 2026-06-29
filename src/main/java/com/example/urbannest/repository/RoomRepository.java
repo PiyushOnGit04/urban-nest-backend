@@ -11,6 +11,10 @@ public interface RoomRepository extends JpaRepository<Room, Long>,
 
     List<Room> findByAvailableTrue();
 
+    List<Room> findAll();
+
+    List<Room> findByCity(String city);
+
     List<Room> findByCityAndAvailableTrue(String city);
 
     List<Room> findByOwnerId(Long ownerId);

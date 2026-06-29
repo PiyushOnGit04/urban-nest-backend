@@ -49,12 +49,16 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
+    public List<Room> getAllRooms() {
+        return roomRepository.findAll();
+    }
+
     public List<Room> getAllAvailableRooms() {
         return roomRepository.findByAvailableTrue();
     }
 
     public List<Room> getRoomsByCity(String city) {
-        return roomRepository.findByCityAndAvailableTrue(city);
+        return roomRepository.findByCity(city);
     }
 
     public List<Room> getRoomsByOwner(Long ownerId) {
@@ -119,12 +123,19 @@ public class RoomService {
             Double minRent,
             Double maxRent,
             RoomType roomType,
+            Boolean available,
             String sortBy,
             String order
     ) {
 
         Specification<Room> specification =
-                RoomSpecification.filterRooms(search, minRent, maxRent, roomType);
+                RoomSpecification.filterRooms(
+                        search,
+                        minRent,
+                        maxRent,
+                        roomType,
+                        available
+                );
 
         Sort sort = Sort.unsorted();
 

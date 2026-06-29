@@ -14,16 +14,19 @@ public class RoomSpecification {
             String search,
             Double minRent,
             Double maxRent,
-            RoomType roomType
+            RoomType roomType,
+            Boolean available
     ) {
 
         return (root, query, criteriaBuilder) -> {
 
             List<Predicate> predicates = new ArrayList<>();
 
-            // Only available rooms
-            predicates.add(criteriaBuilder.equal(root.get("available"), true));
-
+            if (available != null) {
+                predicates.add(
+                        criteriaBuilder.equal(root.get("available"), available)
+                );
+            }
             // Search in title, description, city and locality
             if (search != null && !search.trim().isEmpty()) {
 
@@ -53,6 +56,7 @@ public class RoomSpecification {
                         criteriaBuilder.or(title, description, city, locality)
                 );
             }
+
 
             // Minimum Rent
             if (minRent != null) {

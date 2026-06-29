@@ -55,6 +55,8 @@ public class RoomController {
 
             @RequestParam(required = false) RoomType roomType,
 
+            @RequestParam(required = false) Boolean available,
+
             @RequestParam(required = false) String sortBy,
 
             @RequestParam(defaultValue = "asc") String order
@@ -67,6 +69,7 @@ public class RoomController {
                         minRent,
                         maxRent,
                         roomType,
+                        available,
                         sortBy,
                         order
                 )
