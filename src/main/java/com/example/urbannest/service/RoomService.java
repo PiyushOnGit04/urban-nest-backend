@@ -27,9 +27,6 @@ public class RoomService {
         this.inquiryRequestRepository = inquiryRequestRepository;
     }
 
-    public Optional<Room> getRoomById(Long id) {
-        return roomRepository.findById(id);
-    }
     public Room createRoom(RoomRequest roomDto, User owner) {
 
         List<Amenity> amenities =
