@@ -1,9 +1,12 @@
 package com.example.urbannest.controller;
 
+import com.example.urbannest.dto.UpdateProfileRequest;
 import com.example.urbannest.model.User;
+import com.example.urbannest.security.SecurityUser;
 import com.example.urbannest.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,19 +20,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    // 1. Get a user's profile details by their ID
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserProfile(@PathVariable Long id) {
         return userService.getUserById(id)
                 .map(user -> {
-                    // Strip out the password hash before sending profile data to the mobile screen
                     user.setPassword(null);
                     return ResponseEntity.ok(user);
                 })
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    // 2. Fetch profile data by email address
     @GetMapping("/email")
     public ResponseEntity<?> getUserProfileByEmail(@RequestParam String email) {
         return userService.getUserByEmail(email)
@@ -38,5 +38,28 @@ public class UserController {
                     return ResponseEntity.ok(user);
                 })
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<?> updateOwnProfile(
+            @RequestBody UpdateProfileRequest request,
+            Authentication authentication) {
+
+        try {
+            SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
+            Long userId = securityUser.getUser().getId();
+
+            User updated = userService.updateProfile(
+                    userId,
+                    request.getName(),
+                    request.getPhoneNumber()
+            );
+
+            updated.setPassword(null);
+            return ResponseEntity.ok(updated);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
