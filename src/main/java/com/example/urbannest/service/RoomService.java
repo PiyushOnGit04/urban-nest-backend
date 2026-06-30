@@ -69,20 +69,28 @@ public class RoomService {
         return roomRepository.findById(id);
     }
 
-    public Room updateRoomAvailability(Long roomId, boolean isAvailable) {
+    public Room updateRoomAvailability(Long roomId, boolean isAvailable, Long requesterId) {
 
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found"));
+
+        if (!room.getOwner().getId().equals(requesterId)) {
+            throw new SecurityException("You do not have permission to modify this room");
+        }
 
         room.setAvailable(isAvailable);
 
         return roomRepository.save(room);
     }
 
-    public Room updateRoom(Long roomId, RoomRequest roomDto) {
+    public Room updateRoom(Long roomId, RoomRequest roomDto, Long requesterId) {
 
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found"));
+
+        if (!room.getOwner().getId().equals(requesterId)) {
+            throw new SecurityException("You do not have permission to modify this room");
+        }
 
         room.setTitle(roomDto.getTitle());
         room.setDescription(roomDto.getDescription());
@@ -101,10 +109,13 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-    public void deleteRoom(Long roomId) {
+    public void deleteRoom(Long roomId, Long requesterId) {
 
-        if (!roomRepository.existsById(roomId)) {
-            throw new RuntimeException("Room not found");
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+
+        if (!room.getOwner().getId().equals(requesterId)) {
+            throw new SecurityException("You do not have permission to delete this room");
         }
 
         roomRepository.deleteById(roomId);

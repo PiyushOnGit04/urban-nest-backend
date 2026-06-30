@@ -16,9 +16,13 @@ public class SecurityUser implements UserDetails {
         this.user = user;
     }
 
+    // Expose the underlying domain user so controllers can access id/role without a DB round-trip
+    public User getUser() {
+        return user;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Converts your UserRole enum (e.g., ROLE_TENANT) into a Spring Security authority
         return Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()));
     }
 
